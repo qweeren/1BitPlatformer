@@ -1,0 +1,148 @@
+[gd_scene load_steps=21 format=3 uid="uid://dlf5r4ori0el4"]
+
+[ext_resource type="Script" path="res://player.gd" id="1_dh3iy"]
+[ext_resource type="Texture2D" uid="uid://cu4h7gv4nudcs" path="res://Tilemap/monochrome_tilemap_transparent_packed.png" id="1_h6aie"]
+[ext_resource type="AudioStream" uid="uid://v3minn7b68y2" path="res://Audios/Footstep/footstep_grass_000.ogg" id="3_2chnw"]
+[ext_resource type="AudioStream" uid="uid://cyulgdl4io1wt" path="res://Audios/Footstep/footstep_grass_001.ogg" id="4_subie"]
+[ext_resource type="AudioStream" uid="uid://drvm7on2ollcn" path="res://Audios/Footstep/footstep_grass_002.ogg" id="5_ol0of"]
+[ext_resource type="AudioStream" uid="uid://n6xawdkieqq3" path="res://Audios/Footstep/footstep_grass_003.ogg" id="6_k10qw"]
+[ext_resource type="AudioStream" uid="uid://bwobcglt6imkl" path="res://Audios/Footstep/footstep_grass_004.ogg" id="7_hqswu"]
+[ext_resource type="AudioStream" uid="uid://cfel05h1nex2t" path="res://Audios/Jump/dbjump1.ogg" id="8_pqdr3"]
+[ext_resource type="AudioStream" uid="uid://ba4wshowhlr2n" path="res://Audios/Jump/dbjump2.ogg" id="9_estuj"]
+[ext_resource type="AudioStream" uid="uid://pp457q6mlgpm" path="res://Audios/Jump/jump.mp3" id="10_poylh"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7j3a2"]
+atlas = ExtResource("1_h6aie")
+region = Rect2(0, 192, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yaxdn"]
+atlas = ExtResource("1_h6aie")
+region = Rect2(80, 192, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cafa7"]
+atlas = ExtResource("1_h6aie")
+region = Rect2(32, 192, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8pyp0"]
+atlas = ExtResource("1_h6aie")
+region = Rect2(48, 192, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ip55n"]
+atlas = ExtResource("1_h6aie")
+region = Rect2(64, 192, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gypxg"]
+atlas = ExtResource("1_h6aie")
+region = Rect2(16, 192, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_2v6p3"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7j3a2")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yaxdn")
+}],
+"loop": true,
+"name": &"jump",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cafa7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8pyp0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ip55n")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cafa7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gypxg")
+}],
+"loop": true,
+"name": &"run",
+"speed": 10.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hwmge"]
+size = Vector2(12, 12)
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_s4cm2"]
+streams_count = 5
+stream_0/stream = ExtResource("3_2chnw")
+stream_0/weight = 1.0
+stream_1/stream = ExtResource("4_subie")
+stream_1/weight = 1.0
+stream_2/stream = ExtResource("5_ol0of")
+stream_2/weight = 1.0
+stream_3/stream = ExtResource("6_k10qw")
+stream_3/weight = 1.0
+stream_4/stream = ExtResource("7_hqswu")
+stream_4/weight = 1.0
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_kuvll"]
+streams_count = 2
+stream_0/stream = ExtResource("8_pqdr3")
+stream_0/weight = 1.0
+stream_1/stream = ExtResource("9_estuj")
+stream_1/weight = 1.0
+
+[node name="CharacterBody2D" type="CharacterBody2D"]
+script = ExtResource("1_dh3iy")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
+sprite_frames = SubResource("SpriteFrames_2v6p3")
+animation = &"run"
+frame = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
+position = Vector2(0, 2)
+shape = SubResource("RectangleShape2D_hwmge")
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="."]
+position = Vector2(0, 7)
+emitting = false
+amount = 100
+lifetime = 0.5
+lifetime_randomness = 0.25
+emission_shape = 3
+emission_rect_extents = Vector2(4, 0)
+spread = 101.32
+gravity = Vector2(0, 300)
+angular_velocity_min = -411.05
+angular_velocity_max = 348.72
+linear_accel_min = -27.0
+linear_accel_max = 13.5
+
+[node name="WalkSFX" type="AudioStreamPlayer" parent="."]
+stream = SubResource("AudioStreamRandomizer_s4cm2")
+volume_db = -12.0
+
+[node name="dbJumpSFX" type="AudioStreamPlayer" parent="."]
+stream = SubResource("AudioStreamRandomizer_kuvll")
+volume_db = -8.0
+
+[node name="JumpSFX" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("10_poylh")
+
+[node name="walkTimer" type="Timer" parent="."]
+wait_time = 0.1
+one_shot = true
+autostart = true
+
+[node name="dbJumpTimer" type="Timer" parent="."]
+wait_time = 0.1
+one_shot = true
+autostart = true
